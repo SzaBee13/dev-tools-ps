@@ -168,15 +168,28 @@ dev set --explorer=true/false        - Open or not explorer by default (saves to
             git init
             git branch -M main
 
-            # Path to licenses JSON
+            # Path to local licenses JSON
             $LicensesPath = Join-Path $env:APPDATA "SzaBee13\dev\licenses.json"
 
-            # Load licenses JSON if it exists
+            # Load licenses JSON, download if not found
             if (Test-Path $LicensesPath) {
                 $licenses = Get-Content $LicensesPath | ConvertFrom-Json
             }
             else {
-                $licenses = @{}  # empty object if not found
+                Write-Host "No local licenses found. Downloading from GitHub..." -ForegroundColor Yellow
+                $url = "https://raw.githubusercontent.com/SzaBee13/dev-tools-ps/refs/heads/main/licenses.json"
+
+                try {
+                    $licensesJson = Invoke-RestMethod -Uri $url
+                    # Save it locally for future use
+                    $licensesJson | ConvertTo-Json -Compress | Set-Content -Path $LicensesPath
+                    $licenses = $licensesJson
+                    Write-Host "Licenses downloaded and saved to $LicensesPath" -ForegroundColor Green
+                }
+                catch {
+                    Write-Host "Failed to download licenses JSON. Proceeding without it." -ForegroundColor Red
+                    $licenses = @{}
+                }
             }
 
             # Add license file if user specified
@@ -191,8 +204,7 @@ dev set --explorer=true/false        - Open or not explorer by default (saves to
                 Write-Host "License '$name' added to project." -ForegroundColor Green
             }
 
-
-            # Git remote and commit
+            # Git remote and initial commit
             if ($typeOrName) {
                 git remote add origin $typeOrName
                 git add .
@@ -204,6 +216,7 @@ dev set --explorer=true/false        - Open or not explorer by default (saves to
                 git commit -m "Initial commit"
             }
         }
+
         "set" {
             $ConfigPath = Join-Path $env:APPDATA "SzaBee13\dev"
             $ConfigFile = Join-Path $ConfigPath "config.json"
