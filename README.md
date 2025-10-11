@@ -54,6 +54,12 @@ dev <action> [typeOrName] [name] [--code] [--explorer]
 
 ## Commands
 
+### Define roots
+
+```
+dev set root web "path-to-ur-folder like D:/web"
+```
+
 ### Open a folder
 
 ```powershell
@@ -67,12 +73,6 @@ Opens a folder in VSCode and Explorer. Supports subpaths using `/`.
 ```powershell
 dev create <type> <project-name>
 ```
-
-Supported types:
-
-* `vite`, `web`, `python`, `home`, `discord`, `alpha-cpp`, `alpha-web`, `alpha-vite`
-
-Creates the project in the appropriate root folder and opens it in VSCode and Explorer.
 
 ### Remove a folder
 

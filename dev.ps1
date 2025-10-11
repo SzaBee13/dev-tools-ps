@@ -7,10 +7,10 @@ function dev {
 
         [string]$name,
 
-        [bool]$code,
-
-        [bool]$explorer
+        [object]$code,       # changed
+        [object]$explorer    # changed
     )
+
 
     $DriveRoot = "D:\"
     $Help = @"
@@ -27,17 +27,8 @@ dev ls <web|python|home|discord|alpha-cpp|alpha-web> - List folders in specified
 
 dev set --code=true/false            - Open or not code by default (saves to %appdata%/SzaBee13/dev/config.json)
 dev set --explorer=true/false        - Open or not explorer by default (saves to %appdata%/SzaBee13/dev/config.json)
+dev set root <root-name> <path|rm|remove> - Add root to roots (saves to %appdata%/SzaBee13/dev/roots.json) if path is rm or remove it'll remove that root from roots.json
 "@
-
-    # Change these edit add remove
-    $roots = @{
-        web         = "D:\!_WEB"
-        python      = "D:\_python"
-        home        = "D:\_home"
-        discord     = "D:\_discord"
-        "alpha-cpp" = "D:\_alpha\cpp"
-        "alpha-web" = "D:\_alpha\web"
-    }
 
     function Search-Folder {
         param (
@@ -47,6 +38,43 @@ dev set --explorer=true/false        - Open or not explorer by default (saves to
         return Get-ChildItem -Path $rootPath -Directory -Recurse -ErrorAction SilentlyContinue |
         Where-Object { $_.Name -eq $folderName } |
         Select-Object -First 1
+    }
+
+    function ConvertTo-Hashtable($object) {
+        if ($null -eq $object) { return @{} }
+        if ($object -is [hashtable]) { return $object }
+        $hash = @{}
+        $object.PSObject.Properties | ForEach-Object {
+            $hash[$_.Name] = if ($_.Value -is [psobject]) {
+                ConvertTo-Hashtable $_.Value
+            }
+            else {
+                $_.Value
+            }
+        }
+        return $hash
+    }
+
+    # Load roots from "%appdata%\SzaBee13\dev\roots.json"
+    $RootsFile = Join-Path $env:APPDATA "SzaBee13\dev\roots.json"
+    $roots = @{}
+
+    if (Test-Path $RootsFile) {
+        try {
+            $roots = Get-Content $RootsFile | ConvertFrom-Json | ConvertTo-Hashtable
+
+        }
+        catch {
+            Write-Host "Warning: roots.json is invalid. Starting with empty roots." -ForegroundColor Yellow
+            $roots = @{}
+        }
+    }
+    else {
+        # Create directory and file if missing
+        $dir = Split-Path $RootsFile
+        if (-not (Test-Path $dir)) { New-Item -ItemType Directory -Path $dir -Force | Out-Null }
+        '{}' | Out-File -Encoding utf8 $RootsFile
+        Write-Host "Created new roots.json at $RootsFile" -ForegroundColor Yellow
     }
 
     switch ($action) {
@@ -181,14 +209,23 @@ dev set --explorer=true/false        - Open or not explorer by default (saves to
 
                 try {
                     $licensesJson = Invoke-RestMethod -Uri $url
-                    # Save it locally for future use
+
+                    # Prompt user for their name to replace [name]
+                    $userName = Read-Host "Enter your name for the license copyright"
+
+                    # Replace [name] placeholders in all license entries
+                    foreach ($key in $licensesJson.PSObject.Properties.Name) {
+                        $licensesJson[$key] = $licensesJson[$key] -replace "\[name\]", $userName
+                    }
+
+                    # Save locally for future use
                     $licensesJson | ConvertTo-Json -Compress | Set-Content -Path $LicensesPath
                     $licenses = $licensesJson
-                    Write-Host "Licenses downloaded and saved to $LicensesPath" -ForegroundColor Green
+                    Write-Host "Licenses downloaded, updated with your name, and saved to $LicensesPath" -ForegroundColor Green
                 }
                 catch {
                     Write-Host "Failed to download licenses JSON. Proceeding without it." -ForegroundColor Red
-                    $licenses = @{}
+                    $licenses = @{ }
                 }
             }
 
@@ -218,39 +255,58 @@ dev set --explorer=true/false        - Open or not explorer by default (saves to
         }
 
         "set" {
-            $ConfigPath = Join-Path $env:APPDATA "SzaBee13\dev"
-            $ConfigFile = Join-Path $ConfigPath "config.json"
-
-            if (-not (Test-Path $ConfigPath)) {
-                New-Item -Path $ConfigPath -ItemType Directory -Force | Out-Null
-            }
-
-            # Load existing config or create default
-            if (Test-Path $ConfigFile) {
-                $config = Get-Content $ConfigFile | ConvertFrom-Json
-            }
-            else {
-                $config = [PSCustomObject]@{
-                    code     = $true
-                    explorer = $true
+            if ($typeOrName -eq "root") {
+                if (-not $name) {
+                    Write-Host "Usage: dev set root <root-name> <path | remove>" -ForegroundColor Yellow
+                    return
                 }
-            }
 
-            if ($typeOrName -match "--code=(true|false)") {
-                $config.code = [bool]::Parse($Matches[1])
-                Write-Host "Set 'code' to $($config.code)" -ForegroundColor Green
-            }
-            elseif ($typeOrName -match "--explorer=(true|false)") {
-                $config.explorer = [bool]::Parse($Matches[1])
-                Write-Host "Set 'explorer' to $($config.explorer)" -ForegroundColor Green
+                if (-not (Test-Path $RootsFile)) {
+                    $dir = Split-Path $RootsFile
+                    if (-not (Test-Path $dir)) { New-Item -ItemType Directory -Path $dir -Force | Out-Null }
+                    '{}' | Out-File -Encoding utf8 $RootsFile
+                }
+
+                # Load and ensure it's a hashtable
+                $roots = if (Test-Path $RootsFile) {
+                    $json = Get-Content $RootsFile -Raw
+                    if ($json.Trim()) {
+                        try {
+                            $tmp = $json | ConvertFrom-Json
+                            if ($tmp -is [System.Collections.Hashtable]) { $tmp }
+                            else {
+                                $h = @{}
+                                foreach ($p in $tmp.PSObject.Properties) { $h[$p.Name] = $p.Value }
+                                $h
+                            }
+                        }
+                        catch { @{} }
+                    }
+                    else { @{} }
+                }
+                else { @{} }
+
+                # handle remove or set
+                if ($code -eq "remove" -or $code -eq "rm") {
+                    if ($roots.ContainsKey($name)) {
+                        $roots.Remove($name)
+                        Write-Host "Root '$name' removed." -ForegroundColor Yellow
+                    }
+                    else {
+                        Write-Host "Root '$name' not found." -ForegroundColor Red
+                    }
+                }
+                else {
+                    $roots[$name] = $code
+                    Write-Host "Root '$name' set to path '$code'" -ForegroundColor Green
+                }
+
+                # save file
+                $roots | ConvertTo-Json | Out-File -Encoding utf8 $RootsFile
             }
             else {
-                Write-Host "Please use --code=true/false or --explorer=true/false" -ForegroundColor Yellow
-                return
+                Write-Host "Unknown set type '$typeOrName'" -ForegroundColor Red
             }
-
-            # Save back to JSON
-            $config | ConvertTo-Json | Set-Content $ConfigFile
         }
 
         "help" { Write-Host $Help -ForegroundColor Yellow }
