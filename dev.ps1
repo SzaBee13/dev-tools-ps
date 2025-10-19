@@ -61,11 +61,14 @@ dev set root <root-name> <path|rm|remove> - Add root to roots (saves to %appdata
 
     if (Test-Path $RootsFile) {
         try {
-            $roots = Get-Content $RootsFile | ConvertFrom-Json | ConvertTo-Hashtable
-
+            $json = Get-Content $RootsFile -Raw | ConvertFrom-Json
+            $roots = @{}
+            foreach ($p in $json.PSObject.Properties) {
+                $roots[$p.Name] = $p.Value
+            }
         }
         catch {
-            Write-Host "Warning: roots.json is invalid. Starting with empty roots." -ForegroundColor Yellow
+            Write-Host "Failed to load roots.json, using empty roots." -ForegroundColor Yellow
             $roots = @{}
         }
     }
