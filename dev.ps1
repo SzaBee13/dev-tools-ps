@@ -16,6 +16,7 @@ function dev {
     $Help = @"
 Usage:
 dev open <folder-name>               - Open a folder in VSCode and Explorer
+dev open <root-name> [folder-name]   - Open a configured root or a folder inside it
 dev create <vite|web|python|home|discord|alpha-cpp|alpha-web|alpha-vite> <project-name> - Create a new project
 dev rm <folder-name>                 - Remove a folder
 dev pull [<git-repo-url>] [folder-name] - Clone or pull a git repository into a specified or default folder
@@ -28,6 +29,7 @@ dev ls <web|python|home|discord|alpha-cpp|alpha-web> - List folders in specified
 dev set --code=true/false            - Open or not code by default (saves to %appdata%/SzaBee13/dev/config.json)
 dev set --explorer=true/false        - Open or not explorer by default (saves to %appdata%/SzaBee13/dev/config.json)
 dev set root <root-name> <path|rm|remove> - Add root to roots (saves to %appdata%/SzaBee13/dev/roots.json) if path is rm or remove it'll remove that root from roots.json
+dev roots                            - List all configured roots
 "@
 
     function Search-Folder {
@@ -53,6 +55,27 @@ dev set root <root-name> <path|rm|remove> - Add root to roots (saves to %appdata
             }
         }
         return $hash
+    }
+
+    function Get-DevConfig {
+        $ConfigFile = Join-Path $env:APPDATA "SzaBee13\dev\config.json"
+        $config = @{
+            code = $true
+            explorer = $true
+        }
+
+        if (Test-Path $ConfigFile) {
+            try {
+                $cfg = Get-Content $ConfigFile -Raw | ConvertFrom-Json
+                if ($null -ne $cfg.code) { $config.code = $cfg.code }
+                if ($null -ne $cfg.explorer) { $config.explorer = $cfg.explorer }
+            }
+            catch {
+                Write-Host "Failed to load config.json, using defaults." -ForegroundColor Yellow
+            }
+        }
+
+        return $config
     }
 
     # Load roots from "%appdata%\SzaBee13\dev\roots.json"
@@ -83,40 +106,48 @@ dev set root <root-name> <path|rm|remove> - Add root to roots (saves to %appdata
     switch ($action) {
         "open" {
             # Load default config
-            $ConfigFile = Join-Path $env:APPDATA "SzaBee13\dev\config.json"
-            $openCode = $true
-            $openExplorer = $true
-            if (Test-Path $ConfigFile) {
-                $cfg = Get-Content $ConfigFile | ConvertFrom-Json
-                $openCode = $cfg.code
-                $openExplorer = $cfg.explorer
-            }
+            $config = Get-DevConfig
+            $openCode = $config.code
+            $openExplorer = $config.explorer
 
             # Override with command-line booleans if passed
             if ($PSBoundParameters.ContainsKey("code")) { $openCode = $code }
             if ($PSBoundParameters.ContainsKey("explorer")) { $openExplorer = $explorer }
 
-            # Split folder/subpath
-            $parts = $typeOrName -split "/"
-            $searchName = $parts[0]
-            $subPath = if ($parts.Length -gt 1) { ($parts[1..($parts.Length - 1)] -join "\") } else { "" }
+            if (-not $typeOrName) {
+                Write-Host $Help -ForegroundColor Yellow
+                return
+            }
 
-            # Search folder
-            $foundFolder = Search-Folder -rootPath $DriveRoot -folderName $searchName
+            $targetPath = $null
 
-            if ($foundFolder) {
-                $targetPath = if ($subPath) { Join-Path $foundFolder.FullName $subPath } else { $foundFolder.FullName }
-                if (Test-Path $targetPath) {
-                    Set-Location $targetPath
-                    if ($openCode) { code . }
-                    if ($openExplorer) { explorer.exe . }
-                }
-                else {
-                    Write-Host "Subfolder '$subPath' not found in '$($foundFolder.FullName)'" -ForegroundColor Red
-                }
+            if ($roots.ContainsKey($typeOrName)) {
+                $targetPath = if ($name) { Join-Path $roots[$typeOrName] $name } else { $roots[$typeOrName] }
             }
             else {
-                Write-Host "Folder '$searchName' not found in $DriveRoot" -ForegroundColor Red
+                # Split folder/subpath
+                $parts = $typeOrName -split "/"
+                $searchName = $parts[0]
+                $subPath = if ($parts.Length -gt 1) { ($parts[1..($parts.Length - 1)] -join "\") } else { "" }
+
+                # Search folder
+                $foundFolder = Search-Folder -rootPath $DriveRoot -folderName $searchName
+
+                if ($foundFolder) {
+                    $targetPath = if ($subPath) { Join-Path $foundFolder.FullName $subPath } else { $foundFolder.FullName }
+                }
+            }
+
+            if ($targetPath -and (Test-Path $targetPath)) {
+                Set-Location $targetPath
+                if ($openCode) { code . }
+                if ($openExplorer) { explorer.exe . }
+            }
+            elseif ($targetPath) {
+                Write-Host "Path '$targetPath' not found." -ForegroundColor Red
+            }
+            else {
+                Write-Host "Folder '$typeOrName' not found in $DriveRoot and not in roots." -ForegroundColor Red
             }
         }
         "rm" {
@@ -145,6 +176,13 @@ dev set root <root-name> <path|rm|remove> - Add root to roots (saves to %appdata
                 return
             }
 
+            $config = Get-DevConfig
+            $openCode = $config.code
+            $openExplorer = $config.explorer
+
+            if ($PSBoundParameters.ContainsKey("code")) { $openCode = $code }
+            if ($PSBoundParameters.ContainsKey("explorer")) { $openExplorer = $explorer }
+
             $rootPath = $roots[$typeOrName] 
             if ($typeOrName -eq "vite" -or $typeOrName -eq "alpha-vite") {
                 $rootPath = if ($typeOrName -eq "vite") { $roots["web"] } else { $roots["alpha-web"] }
@@ -159,8 +197,8 @@ dev set root <root-name> <path|rm|remove> - Add root to roots (saves to %appdata
                 Set-Location "$rootPath\$name"
             }
 
-            code .
-            explorer.exe .
+            if ($openCode) { code . }
+            if ($openExplorer) { explorer.exe . }
         }
         "pull" {
             if (Test-Path ".git") {
@@ -309,6 +347,17 @@ dev set root <root-name> <path|rm|remove> - Add root to roots (saves to %appdata
             }
             else {
                 Write-Host "Unknown set type '$typeOrName'" -ForegroundColor Red
+            }
+        }
+
+        "roots" {
+            if ($roots.Count -eq 0) {
+                Write-Host "No roots configured. Use: dev set root <root-name> <path>" -ForegroundColor Yellow
+            }
+            else {
+                $roots.GetEnumerator() | Sort-Object Name | ForEach-Object {
+                    Write-Host "$($_.Name): $($_.Value)" -ForegroundColor Green
+                }
             }
         }
 
