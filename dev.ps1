@@ -140,16 +140,21 @@ dev roots                            - List all configured roots
 
             if ($targetPath -and (Test-Path $targetPath)) {
                 Set-Location $targetPath
-                if (git rev-parse --is-inside-work-tree 2>$null) {
-                    Write-Host "Inside a git repo"
-                    if (git remote get-url origin 2>$null) {
-                        Write-Host "Origin exists"
-                        git pull
-                    } else {
-                        Write-Host "No origin"
-                    }
+                git rev-parse --is-inside-work-tree 2>$null | Out-Null
+
+                if ($LASTEXITCODE -eq 0) {
+                  Write-Host "Inside a git repo"
+
+                  git remote get-url origin 2>$null | Out-Null
+
+                  if ($LASTEXITCODE -eq 0) {
+                    Write-Host "Origin exists"
+                    git pull
+                  } else {
+                    Write-Host "No origin"
+                  }
                 } else {
-                    Write-Host "Not a git repo"
+                  Write-Host "Not a git repo"
                 }
                 if ($openCode) { code . }
                 if ($openExplorer) { explorer.exe . }
