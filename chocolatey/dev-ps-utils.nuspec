@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
   <metadata>
     <id>dev-ps-utils</id>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
     <packageSourceUrl>https://github.com/SzaBee13/dev-tools-ps</packageSourceUrl>
     <owners>SzaBee13</owners>
     <title>Dev PowerShell Utility</title>
@@ -63,7 +63,7 @@ dev <action> [typeOrName] [name] [--code] [--explorer]
   </metadata>
   <files>
     <file src="tools\**" target="tools" />
-    <file src="..\dev.ps1" target="tools" />
+    <file src="..\src\**" target="tools\src" />
     <file src="..\licenses.json" target="tools" />
     <file src="..\LICENSE.md" target="tools" />
     <file src="..\README.md" target="tools" />

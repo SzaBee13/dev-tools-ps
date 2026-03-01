@@ -5,6 +5,7 @@ This directory contains the Chocolatey package files for Dev PowerShell Utility.
 ## Prerequisites
 
 1. Install Chocolatey (if not already installed):
+
    ```powershell
    Set-ExecutionPolicy Bypass -Scope Process -Force
    [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
@@ -12,6 +13,7 @@ This directory contains the Chocolatey package files for Dev PowerShell Utility.
    ```
 
 2. Install Chocolatey package builder:
+
    ```powershell
    choco install checksum -y
    ```
@@ -19,25 +21,29 @@ This directory contains the Chocolatey package files for Dev PowerShell Utility.
 ## Building the Package
 
 1. Navigate to the chocolatey directory:
+
    ```powershell
    cd chocolatey
    ```
 
 2. Pack the Chocolatey package:
+
    ```powershell
-   choco pack dev-powershell-utility.nuspec
+   choco pack dev-ps-utils.nuspec
    ```
 
-   This will create a file named `dev-powershell-utility.1.1.0.nupkg`.
+   This will create a file named `dev-ps-utils.1.1.0.nupkg`.
 
 ## Testing the Package Locally
 
 1. Install the package locally for testing (from the chocolatey directory):
+
    ```powershell
-   choco install dev-powershell-utility -s . -y
+   choco install dev-ps-utils -s . -y
    ```
 
 2. Test the `dev` command:
+
    ```powershell
    # Reload your profile first
    . $PROFILE
@@ -47,33 +53,36 @@ This directory contains the Chocolatey package files for Dev PowerShell Utility.
    ```
 
 3. Uninstall to test the uninstallation process:
+
    ```powershell
-   choco uninstall dev-powershell-utility -y
+   choco uninstall dev-ps-utils -y
    ```
 
 ## Publishing to Chocolatey Community Repository
 
-1. Create an account at https://community.chocolatey.org/
+1. Create an account at [Chocolatey Community Repository](https://community.chocolatey.org/)
 
-2. Get your API key from https://community.chocolatey.org/account
+2. Get your API key from [Your Account Page](https://community.chocolatey.org/account)
 
 3. Set your API key (only need to do this once):
+
    ```powershell
    choco apikey --key YOUR_API_KEY --source https://push.chocolatey.org/
    ```
 
 4. Push your package:
+
    ```powershell
-   choco push dev-powershell-utility.1.1.0.nupkg --source https://push.chocolatey.org/
+   choco push dev-ps-utils.1.2.0.nupkg --source https://push.chocolatey.org/
    ```
 
 5. Wait for moderation approval (first-time packages require manual approval).
 
 ## Package Structure
 
-```
-dev-powershell-utility/
-├── dev-powershell-utility.nuspec    # Package specification
+```bash
+dev-ps-utils/
+├── dev-ps-utils.nuspec    # Package specification
 ├── tools/
 │   ├── chocolateyInstall.ps1        # Installation script
 │   ├── chocolateyUninstall.ps1      # Uninstallation script
@@ -86,7 +95,7 @@ dev-powershell-utility/
 
 ## Installation Behavior
 
-When users install the package with `choco install dev-powershell-utility`, it will:
+When users install the package with `choco install dev-ps-utils`, it will:
 
 1. Copy `dev.ps1` to the Chocolatey tools directory
 2. Create configuration directory at `%APPDATA%\SzaBee13\dev\`
@@ -97,7 +106,7 @@ When users install the package with `choco install dev-powershell-utility`, it w
 
 ## Uninstallation Behavior
 
-When users uninstall with `choco uninstall dev-powershell-utility`, it will:
+When users uninstall with `choco uninstall dev-ps-utils`, it will:
 
 1. Remove the dev function from the PowerShell profile
 2. Inform the user about configuration files (doesn't auto-delete to preserve user data)
@@ -108,7 +117,7 @@ When users uninstall with `choco uninstall dev-powershell-utility`, it will:
 When releasing a new version:
 
 1. Update the version number in:
-   - `dev-powershell-utility.nuspec` (in the `<version>` tag)
+   - `dev-ps-utils.nuspec` (in the `<version>` tag)
    - `setup.iss` (in the `#define MyAppVersion` line)
 
 2. Update the release notes in the nuspec file or link to GitHub releases
