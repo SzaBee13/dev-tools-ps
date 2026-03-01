@@ -46,8 +46,8 @@ dev <action> [typeOrName] [name] [--code] [--explorer]
 ```
 
 * `<action>`: The operation you want to perform.
-* `[typeOrName]`: Depends on action (folder name, project type, or Git URL).
-* `[name]`: Optional name for new project, commit message, or folder.
+* `[typeOrName]`: Depends on action (folder name, project type, root name, or Git URL).
+* `[name]`: Optional name for new project, commit message, folder, or root subfolder.
 * `[--code]`, `[--explorer]`: Override default behavior to open VSCode or Explorer.
 
 ---
@@ -67,6 +67,12 @@ dev open <folder-name>
 ```
 
 Opens a folder in VSCode and Explorer. Supports subpaths using `/`.
+
+```powershell
+dev open <root-name> [folder-name]
+```
+
+Opens a configured root path directly, or a folder inside that root.
 
 ### Create a new project
 
@@ -112,6 +118,12 @@ dev ls <type>
 
 Valid types: `web`, `python`, `home`, `discord`, `alpha-cpp`, `alpha-web`
 
+### List configured roots
+
+```powershell
+dev roots
+```
+
 ### Set default behavior
 
 ```powershell
@@ -123,6 +135,13 @@ dev set --explorer=true/false
 ```
 
 Saves default preferences in `%appdata%\SzaBee13\dev\config.json`.
+
+You can also override these defaults per command:
+
+```powershell
+dev open <folder-name> --code=false
+dev create <type> <project-name> --explorer=false
+```
 
 ### Help
 
