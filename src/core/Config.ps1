@@ -88,3 +88,131 @@ function Get-DevLicenses {
         }
     }
 }
+
+function Get-DevRepositories {
+    $ReposFile = Join-Path $env:APPDATA "SzaBee13\dev\repos.json"
+    $repos = @{}
+
+    if (Test-Path $ReposFile) {
+        try {
+            $json = Get-Content $ReposFile -Raw | ConvertFrom-Json
+            foreach ($p in $json.PSObject.Properties) {
+                # Skip metadata properties
+                if (-not $p.Name.StartsWith("_")) {
+                    $repos[$p.Name] = $p.Value
+                }
+            }
+        }
+        catch {
+            Write-Host "Failed to load repos.json" -ForegroundColor Yellow
+            $repos = @{}
+        }
+    }
+    else {
+        $dir = Split-Path $ReposFile
+        if (-not (Test-Path $dir)) { New-Item -ItemType Directory -Path $dir -Force | Out-Null }
+        '{}' | Out-File -Encoding utf8 $ReposFile
+    }
+    
+    return $repos
+}
+
+function Save-DevRepositories {
+    param([hashtable]$repos)
+    
+    $ReposFile = Join-Path $env:APPDATA "SzaBee13\dev\repos.json"
+    $dir = Split-Path $ReposFile
+    if (-not (Test-Path $dir)) { New-Item -ItemType Directory -Path $dir -Force | Out-Null }
+    
+    $repos | ConvertTo-Json | Out-File -Encoding utf8 $ReposFile
+}
+
+function Scan-GitRepositories {
+    param(
+        [string[]]$paths = @()
+    )
+    
+    $foundRepos = @{}
+    
+    # Add default pull path if not already in paths
+    $pullPath = "D:\pull"
+    if ($paths -notcontains $pullPath) {
+        $paths += $pullPath
+    }
+    
+    # Scan each path for git repositories
+    foreach ($scanPath in $paths) {
+        if (Test-Path $scanPath) {
+            Write-Verbose "Scanning: $scanPath"
+            
+            # Find all .git folders (directories or files)
+            $gitDirs = Get-ChildItem -Path $scanPath -Filter ".git" -Recurse -ErrorAction SilentlyContinue -Force
+            
+            foreach ($gitDir in $gitDirs) {
+                $repoPath = $gitDir.Parent.FullName
+                
+                try {
+                    # Get git repo info
+                    $gitConfig = Join-Path $repoPath ".git\config"
+                    
+                    if (Test-Path $gitConfig) {
+                        $url = $null
+                        $content = Get-Content $gitConfig -ErrorAction SilentlyContinue
+                        
+                        # Parse git config to get repo URL
+                        foreach ($line in $content) {
+                            if ($line -match 'url = (.+)') {
+                                $url = $matches[1]
+                                break
+                            }
+                        }
+                        
+                        if ($url) {
+                            # Extract owner and repo name from URL
+                            $repoName = Split-Path -Leaf $repoPath
+                            $owner = $null
+                            $platform = 'github'
+                            
+                            if ($url -match 'github\.com[:/]([^/]+)/(.+?)(?:\.git)?$') {
+                                $owner = $matches[1]
+                                $platform = 'github'
+                            }
+                            elseif ($url -match 'gitlab\.com[:/]([^/]+)/(.+?)(?:\.git)?$') {
+                                $owner = $matches[1]
+                                $platform = 'gitlab'
+                            }
+                            elseif ($url -match 'bitbucket\.org[:/]([^/]+)/(.+?)(?:\.git)?$') {
+                                $owner = $matches[1]
+                                $platform = 'bitbucket'
+                            }
+                            else {
+                                # Extract last path component as owner
+                                $urlParts = $url -split '/' | Where-Object { $_ }
+                                if ($urlParts.Count -ge 2) {
+                                    $owner = $urlParts[-2]
+                                }
+                            }
+                            
+                            if ($owner) {
+                                $key = "$owner/$repoName"
+                                $foundRepos[$key] = @{
+                                    url = $url.TrimEnd('.git')
+                                    path = $repoPath
+                                    localName = $repoName
+                                    platform = $platform
+                                    owner = $owner
+                                    lastPulled = (Get-Item $repoPath).LastWriteTime.ToUniversalTime().ToString('o')
+                                }
+                            }
+                        }
+                    }
+                }
+                catch {
+                    Write-Verbose "Error scanning repo at $repoPath : $_"
+                }
+            }
+        }
+    }
+    
+    return $foundRepos
+}

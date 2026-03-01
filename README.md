@@ -35,6 +35,7 @@
    ```powershell
    . $PROFILE
    ```
+  
 3. Ensure VSCode (`code`) and Git are installed and added to your PATH.
 
 ---
@@ -56,7 +57,7 @@ dev <action> [typeOrName] [name] [--code] [--explorer]
 
 ### Define roots
 
-```
+```powershell
 dev set root web "path-to-ur-folder like D:/web"
 ```
 
@@ -157,7 +158,7 @@ Displays usage information.
 
 The tool stores default preferences in:
 
-```
+```bash
 %APPDATA%\SzaBee13\dev\config.json
 ```
 

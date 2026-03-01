@@ -1,0 +1,29 @@
+{
+  "_note": "This is a template file. Actual repository data is stored in %APPDATA%\\SzaBee13\\dev\\repos.json",
+  "_structure": {
+    "owner/repo-name": {
+      "url": "https://github.com/owner/repo-name.git",
+      "path": "D:\\pull\\repo-name",
+      "localName": "repo-name",
+      "platform": "github|gitlab|bitbucket",
+      "owner": "owner",
+      "lastPulled": "ISO 8601 timestamp"
+    }
+  },
+  "username/repo-name": {
+    "url": "https://github.com/username/repo-name.git",
+    "path": "D:\\pull\\repo-name",
+    "localName": "repo-name",
+    "platform": "github",
+    "owner": "username",
+    "lastPulled": "2024-03-01T10:30:00.000Z"
+  },
+  "another-user/another-repo": {
+    "url": "https://gitlab.com/another-user/another-repo.git",
+    "path": "D:\\pull\\another-repo",
+    "localName": "another-repo",
+    "platform": "gitlab",
+    "owner": "another-user",
+    "lastPulled": "2024-02-28T14:45:30.000Z"
+  }
+}

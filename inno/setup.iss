@@ -2,7 +2,7 @@
 ; Installer for the Dev command-line tool
 
 #define MyAppName "Dev PowerShell Utility"
-#define MyAppVersion "1.2.0"
+#define MyAppVersion "1.2.1"
 #define MyAppPublisher "SzaBee13"
 #define MyAppURL "https://github.com/SzaBee13/dev-tools-ps"
 #define MyAppExeName "dev.ps1"

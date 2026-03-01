@@ -72,7 +72,7 @@ $dotSourceLine
 "@
     Add-Content -Path $profilePath -Value $addition -Force
     Write-Host ""
-    Write-Host "✓ Dev PowerShell Utility has been installed successfully!" -ForegroundColor Green
+    Write-Host "[OK] Dev PowerShell Utility has been installed successfully!" -ForegroundColor Green
     Write-Host ""
     Write-Host "To start using the 'dev' command, either:" -ForegroundColor Yellow
     Write-Host "  1. Restart your PowerShell session, or" -ForegroundColor Yellow
@@ -80,5 +80,5 @@ $dotSourceLine
     Write-Host ""
 } else {
     Write-Host "Dev function is already present in PowerShell profile." -ForegroundColor Yellow
-    Write-Host "✓ Installation complete!" -ForegroundColor Green
+    Write-Host "[OK] Installation complete!" -ForegroundColor Green
 }

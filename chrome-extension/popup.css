@@ -1,0 +1,96 @@
+body {
+    width: 350px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+}
+
+#container {
+    padding: 16px;
+    color: #333;
+}
+
+h2 {
+    margin: 0 0 8px 0;
+    font-size: 16px;
+    color: #1976d2;
+}
+
+p {
+    margin: 8px 0;
+    font-size: 14px;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+#openBtn {
+    background-color: #4CAF50;
+    color: white;
+}
+
+#openBtn:hover {
+    background-color: #45a049;
+}
+
+#openBtn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+#pullBtn {
+    background-color: #2196F3;
+    color: white;
+}
+
+#pullBtn:hover {
+    background-color: #0b7dda;
+}
+
+#pullBtn:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+#refreshBtn {
+    background-color: #f0f0f0;
+    color: #333;
+    border: 1px solid #ddd;
+}
+
+#refreshBtn:hover {
+    background-color: #e0e0e0;
+}
+
+#statusMessage {
+    background-color: #e3f2fd;
+    border-left: 4px solid #2196F3;
+    color: #1565c0;
+}
+
+#statusMessage.success {
+    background-color: #e8f5e9;
+    border-left-color: #4CAF50;
+    color: #2e7d32;
+}
+
+#statusMessage.error {
+    background-color: #ffebee;
+    border-left-color: #f44336;
+    color: #c62828;
+}
+
+#statusMessage.warning {
+    background-color: #fff3e0;
+    border-left-color: #ff9800;
+    color: #e65100;
+}

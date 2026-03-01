@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dev Tool - Open Repo</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <div id="container">
+        <div id="loading" style="display: none;">
+            <p>Processing...</p>
+        </div>
+        
+        <div id="content" style="display: none;">
+            <h2 id="repoName"></h2>
+            <p id="repoUrl" style="font-size: 12px; color: #666; word-break: break-all;"></p>
+            
+            <div id="statusMessage" style="margin: 10px 0; padding: 10px; border-radius: 4px; display: none;"></div>
+            
+            <button id="openBtn">Open with Dev Tool</button>
+            <button id="pullBtn" style="display: none; margin-top: 8px;">Pull Repository</button>
+            <button id="refreshBtn" style="margin-top: 8px; font-size: 12px;">Refresh Status</button>
+            <button id="syncBtn" style="margin-top: 8px; font-size: 12px; background-color: #ff9800; color: white;">Sync Pulled Repos</button>
+        </div>
+        
+        <div id="error" style="display: none;">
+            <p style="color: #d32f2f; font-weight: bold;">Error</p>
+            <p id="errorMessage"></p>
+        </div>
+        
+        <div id="noRepo" style="display: none;">
+            <p>No git repository detected on this page.</p>
+            <p style="font-size: 12px; color: #666;">Supported sites: GitHub, GitLab, Bitbucket</p>
+        </div>
+    </div>
+    
+    <script src="popup.js"></script>
+</body>
+</html>

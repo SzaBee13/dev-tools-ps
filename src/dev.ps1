@@ -26,7 +26,9 @@ function dev {
         [string]$name,
 
         [object]$code,
-        [object]$explorer
+        [object]$explorer,
+        
+        [switch]$json
     )
 
     $DriveRoot = "D:\"
@@ -40,7 +42,9 @@ dev release <commit-message> [detailed-message] - Commit and push changes to the
 dev local-release <commit-message> [detailed-message] - Commit changes locally without pushing
 dev init [<git-repo-url>]            - Initialize a new git repository, optionally linking to a remote
 dev status                           - Show git status
+dev list [--json]                    - List folders or repositories (--json outputs repos as JSON)
 dev ls <web|python|home|discord|alpha-cpp|alpha-web> - List folders in specified category
+dev repos:scan                       - Scan all folders for git repos and save to repos.json
 
 dev set --code=true/false            - Open or not code by default (saves to %appdata%/SzaBee13/dev/config.json)
 dev set --explorer=true/false        - Open or not explorer by default (saves to %appdata%/SzaBee13/dev/config.json)
@@ -60,6 +64,17 @@ dev set root <root-name> <path|rm|remove> - Add root to roots (saves to %appdata
         }
         "ls" {
             Invoke-DevList -typeOrName $typeOrName -roots $roots
+        }
+        "list" {
+            if ($typeOrName -eq "--json" -or $json) {
+                Invoke-DevList -typeOrName $typeOrName -json -roots $roots
+            }
+            else {
+                Invoke-DevList -typeOrName $typeOrName -roots $roots
+            }
+        }
+        "repos:scan" {
+            Invoke-ReposScan -roots $roots
         }
         "create" {
             Invoke-DevCreate -typeOrName $typeOrName -name $name -roots $roots
