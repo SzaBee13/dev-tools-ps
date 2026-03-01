@@ -62,5 +62,3 @@ function Invoke-DevSet {
         Write-Host "Unknown set type '$typeOrName'" -ForegroundColor Red
     }
 }
-
-Export-ModuleMember -Function Invoke-DevSet

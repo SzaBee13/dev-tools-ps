@@ -75,5 +75,3 @@ function Invoke-ReposScan {
         totalRepos = $existingRepos.Count
     } | ConvertTo-Json
 }
-
-Export-ModuleMember -Function Invoke-DevList, Invoke-ReposScan

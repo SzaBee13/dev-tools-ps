@@ -39,46 +39,63 @@ if (-not (Test-Path $rootsFile)) {
     Set-Content -Path $rootsFile -Value '{}' -Force
 }
 
-# Determine PowerShell profile path
-$profilePath = $PROFILE.CurrentUserAllHosts
-if ([string]::IsNullOrEmpty($profilePath)) {
-    $profilePath = $PROFILE
-}
+# Determine profile paths - cover both Windows PowerShell 5.1 and PowerShell 7+
+$profilePaths = @(
+    # Windows PowerShell 5.1
+    (Join-Path $env:USERPROFILE "Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1"),
+    # PowerShell 7+
+    (Join-Path $env:USERPROFILE "Documents\PowerShell\Microsoft.PowerShell_profile.ps1")
+)
 
-# Ensure profile directory exists
-$profileDir = Split-Path -Parent $profilePath
-if (-not (Test-Path $profileDir)) {
-    Write-Host "Creating PowerShell profile directory: $profileDir"
-    New-Item -ItemType Directory -Path $profileDir -Force | Out-Null
-}
-
-# Add dev function to PowerShell profile
 $dotSourceLine = ". `"$scriptFile`""
-$profileContent = ''
-
-if (Test-Path $profilePath) {
-    $profileContent = Get-Content $profilePath -Raw -ErrorAction SilentlyContinue
-    if ($null -eq $profileContent) {
-        $profileContent = ''
-    }
-}
-
-if ($profileContent -notmatch [regex]::Escape($scriptFile)) {
-    Write-Host "Adding dev function to PowerShell profile: $profilePath" -ForegroundColor Green
-    $addition = @"
+$addition = @"
 
 # Dev PowerShell Utility
 $dotSourceLine
 "@
-    Add-Content -Path $profilePath -Value $addition -Force
-    Write-Host ""
-    Write-Host "[OK] Dev PowerShell Utility has been installed successfully!" -ForegroundColor Green
-    Write-Host ""
-    Write-Host "To start using the 'dev' command, either:" -ForegroundColor Yellow
-    Write-Host "  1. Restart your PowerShell session, or" -ForegroundColor Yellow
-    Write-Host "  2. Run: . `$PROFILE" -ForegroundColor Yellow
-    Write-Host ""
-} else {
-    Write-Host "Dev function is already present in PowerShell profile." -ForegroundColor Yellow
-    Write-Host "[OK] Installation complete!" -ForegroundColor Green
+
+Write-Host ""
+Write-Host "=== Profile Installation ===" -ForegroundColor Cyan
+Write-Host "Script File: $scriptFile" -ForegroundColor Gray
+
+# Check if script file exists
+if (-not (Test-Path $scriptFile)) {
+    Write-Host "[ERROR] Script file not found: $scriptFile" -ForegroundColor Red
+    throw "Installation failed: dev.ps1 not found in tools directory"
 }
+
+foreach ($profilePath in $profilePaths) {
+    Write-Host "Profile: $profilePath" -ForegroundColor Gray
+
+    # Ensure profile directory exists
+    $profileDir = Split-Path -Parent $profilePath
+    if (-not (Test-Path $profileDir)) {
+        New-Item -ItemType Directory -Path $profileDir -Force | Out-Null
+    }
+
+    $profileContent = ''
+    if (Test-Path $profilePath) {
+        $profileContent = Get-Content $profilePath -Raw -ErrorAction SilentlyContinue
+        if ($null -eq $profileContent) { $profileContent = '' }
+    }
+
+    if ($profileContent -notmatch [regex]::Escape($scriptFile)) {
+        try {
+            Add-Content -Path $profilePath -Value $addition -Force -ErrorAction Stop
+            Write-Host "[OK] Added to $profilePath" -ForegroundColor Green
+        }
+        catch {
+            Write-Host "[WARNING] Could not update profile $profilePath`: $_" -ForegroundColor Yellow
+        }
+    } else {
+        Write-Host "[SKIP] Already present in $profilePath" -ForegroundColor Gray
+    }
+}
+
+Write-Host ""
+Write-Host "[OK] Dev PowerShell Utility has been installed successfully!" -ForegroundColor Green
+Write-Host ""
+Write-Host "To start using the 'dev' command, either:" -ForegroundColor Yellow
+Write-Host "  1. Restart your PowerShell session, or" -ForegroundColor Yellow
+Write-Host "  2. Run: . `$PROFILE" -ForegroundColor Yellow
+Write-Host ""

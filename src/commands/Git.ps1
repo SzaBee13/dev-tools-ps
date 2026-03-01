@@ -91,5 +91,3 @@ function Invoke-DevInit {
         git commit -m "Initial commit"
     }
 }
-
-Export-ModuleMember -Function Invoke-DevPull, Invoke-DevRelease, Invoke-DevLocalRelease, Invoke-DevStatus, Invoke-DevInit

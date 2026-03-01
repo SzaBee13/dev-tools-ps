@@ -29,5 +29,3 @@ function Invoke-DevCreate {
     code .
     explorer.exe .
 }
-
-Export-ModuleMember -Function Invoke-DevCreate

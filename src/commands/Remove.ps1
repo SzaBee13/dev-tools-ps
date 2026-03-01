@@ -17,5 +17,3 @@ function Invoke-DevRemove {
         Write-Host "Folder '$searchName' not found in $DriveRoot" -ForegroundColor Red
     }
 }
-
-Export-ModuleMember -Function Invoke-DevRemove
