@@ -4,7 +4,7 @@ The Dev PowerShell Utility has been refactored into a modular structure for bett
 
 ## Directory Structure
 
-```
+```bash
 src/
 ├── dev.ps1                  # Main entry point - loads all modules and dispatches commands
 ├── core/                    # Core functionality
@@ -22,6 +22,7 @@ src/
 ## Module Organization
 
 ### Main Entry Point (`dev.ps1`)
+
 - Imports all core and command modules
 - Defines the main `dev` function
 - Dispatches commands to appropriate handlers
@@ -30,10 +31,12 @@ src/
 ### Core Modules
 
 #### `core/Helpers.ps1`
+
 - `Search-Folder`: Searches for folders recursively
 - `ConvertTo-Hashtable`: Converts PSObjects to hashtables
 
 #### `core/Config.ps1`
+
 - `Get-DevConfig`: Loads user configuration (code/explorer preferences)
 - `Get-DevRoots`: Loads root paths from roots.json
 - `Save-DevRoots`: Saves root paths to roots.json
@@ -84,21 +87,25 @@ To add a new command:
 ## Package Distribution
 
 Both Chocolatey and Inno Setup installers have been updated to:
+
 - Include the entire `src` directory structure
 - Reference `src\dev.ps1` as the main entry point
 - Preserve the modular structure in the installation directory
 
 ### Chocolatey Package
+
 - Files are installed to Chocolatey's tools directory
 - Profile is updated to source `src\dev.ps1`
 
 ### Inno Setup Installer
+
 - Files are installed to Program Files
 - Profile is updated to source `{app}\src\dev.ps1`
 
 ## Backward Compatibility
 
 The modular structure maintains full backward compatibility:
+
 - Same command-line interface
 - Same configuration file locations
 - Same behavior for all commands
