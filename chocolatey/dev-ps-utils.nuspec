@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>dev-ps-utils</id>
+    <version>1.1.0</version>
+    <packageSourceUrl>https://github.com/SzaBee13/dev-tools-ps</packageSourceUrl>
+    <owners>SzaBee13</owners>
+    <title>Dev PowerShell Utility</title>
+    <authors>SzaBee13</authors>
+    <projectUrl>https://github.com/SzaBee13/dev-tools-ps</projectUrl>
+    <copyright>2026 SzaBee13</copyright>
+    <licenseUrl>https://github.com/SzaBee13/dev-tools-ps/blob/main/LICENSE.md</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <projectSourceUrl>https://github.com/SzaBee13/dev-tools-ps</projectSourceUrl>
+    <docsUrl>https://github.com/SzaBee13/dev-tools-ps/blob/main/README.md</docsUrl>
+    <bugTrackerUrl>https://github.com/SzaBee13/dev-tools-ps/issues</bugTrackerUrl>
+    <tags>powershell development utility productivity cli devtools vscode git</tags>
+    <summary>PowerShell function to simplify and streamline development workflows on Windows</summary>
+    <description><![CDATA[
+# Dev PowerShell Utility
+
+`dev` is a PowerShell function designed to simplify and streamline development workflows on Windows. It allows you to quickly open, create, manage, and version-control projects across multiple development types including web, Python, Discord bots, and more.
+
+## Features
+
+* Open project folders in VSCode and/or Windows Explorer
+* Create new projects for various frameworks and languages (Vite, Python, Discord bots, C++, etc.)
+* Remove folders easily
+* Clone or pull Git repositories
+* Commit and push changes to Git
+* Initialize Git repositories with optional license
+* List existing project folders by category
+* Save default preferences for opening VSCode and Explorer
+
+## Usage
+
+```powershell
+dev <action> [typeOrName] [name] [--code] [--explorer]
+```
+
+## Commands
+
+* `dev open <folder-name>` - Open a folder in VSCode and Explorer
+* `dev create <type> <project-name>` - Create a new project
+* `dev rm <folder-name>` - Remove a folder
+* `dev pull [<git-repo-url>] [folder-name]` - Clone or pull a git repository
+* `dev release <commit-message>` - Commit and push changes
+* `dev init [<git-repo-url>]` - Initialize a new git repository
+* `dev status` - Show git status
+* `dev ls <category>` - List folders in specified category
+* `dev set` - Configure default settings
+
+## Requirements
+
+* PowerShell 5.1 or later
+* VSCode (optional, for `--code` functionality)
+* Git (optional, for version control features)
+]]></description>
+    <releaseNotes>https://github.com/SzaBee13/dev-tools-ps/releases</releaseNotes>
+    <dependencies>
+      <dependency id="powershell" version="5.1" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+    <file src="..\dev.ps1" target="tools" />
+    <file src="..\licenses.json" target="tools" />
+    <file src="..\LICENSE.md" target="tools" />
+    <file src="..\README.md" target="tools" />
+  </files>
+</package>
