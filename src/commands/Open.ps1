@@ -14,8 +14,8 @@ function Invoke-DevOpen {
     $openExplorer = $config.explorer
 
     # Override with command-line booleans if passed
-    if ($PSBoundParameters.ContainsKey("code")) { $openCode = $code }
-    if ($PSBoundParameters.ContainsKey("explorer")) { $openExplorer = $explorer }
+    if ($null -ne $code) { $openCode = $code }
+    if ($null -ne $explorer) { $openExplorer = $explorer }
 
     # Split folder/subpath
     $parts = $typeOrName -split "/"
