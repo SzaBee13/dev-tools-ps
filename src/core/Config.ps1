@@ -5,6 +5,8 @@ function Get-DevConfig {
     $config = @{
         code = $true
         explorer = $true
+        pullPath = "D:\pull"
+        driveRoot = "D:\"
     }
     
     if (Test-Path $ConfigFile) {
@@ -12,6 +14,8 @@ function Get-DevConfig {
             $cfg = Get-Content $ConfigFile | ConvertFrom-Json
             $config.code = $cfg.code
             $config.explorer = $cfg.explorer
+            if ($cfg.pullPath) { $config.pullPath = $cfg.pullPath } else { $config.pullPath = "C:\\Users\\$env:USERNAME\\Downloads" }
+            if ($cfg.driveRoot) { $config.driveRoot = $cfg.driveRoot } else { $config.driveRoot = "C:\\Users\\$env:USERNAME\\Documents" }
         }
         catch {
             Write-Host "Failed to load config.json, using defaults." -ForegroundColor Yellow
@@ -127,7 +131,7 @@ function Save-DevRepositories {
     $repos | ConvertTo-Json | Out-File -Encoding utf8 $ReposFile
 }
 
-function Scan-GitRepositories {
+function Search-GitRepositories {
     param(
         [string[]]$paths = @()
     )

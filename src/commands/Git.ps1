@@ -91,3 +91,16 @@ function Invoke-DevInit {
         git commit -m "Initial commit"
     }
 }
+
+function Test-GitRemote {
+  param(
+    [string]$Folder = (Get-Location)
+  )
+
+  if (-not (Test-Path (Join-Path $Folder ".git"))) { return $false }
+
+  $remoteOrigin = git -C $Folder remote get-url origin 2>$null
+  if (-not $remoteOrigin) { return $false }
+
+  return $true
+}

@@ -56,7 +56,7 @@ function Invoke-ReposScan {
     }
     
     # Scan for repos
-    $foundRepos = Scan-GitRepositories -paths $pathsToScan
+    $foundRepos = Search-GitRepositories -paths $pathsToScan
     
     # Get existing repos
     $existingRepos = Get-DevRepositories

@@ -31,6 +31,11 @@ function Invoke-DevOpen {
             Set-Location $targetPath
             if ($openCode) { code . }
             if ($openExplorer) { explorer.exe . }
+            # check if its a git repo and has an remote url then pull the latest changes
+            $hasRemote = Test-GitRemote -Folder $targetPath
+            if ($hasRemote) {
+                git pull | Out-Null
+            }
         }
         else {
             Write-Host "Subfolder '$subPath' not found in '$($foundFolder.FullName)'" -ForegroundColor Red
