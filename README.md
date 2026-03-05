@@ -2,7 +2,7 @@
 
 [![GitHub contributors](https://img.shields.io/github/contributors/SzaBee13/dev-tools-ps)](https://github.com/SzaBee13/dev-tools-ps/graphs/contributors)
 [![GitHub release](https://img.shields.io/github/v/release/SzaBee13/dev-tools-ps?include_prereleases)](https://github.com/SzaBee13/dev-tools-ps/releases)
-[![License](https://img.shields.io/github/license/SzaBee13/dev-tools-ps)](https://github.com/SzaBee13/dev-tools-ps/blob/main/LICENSE)
+[![License](https://img.shields.io/github/license/SzaBee13/dev-tools-ps.md)](https://github.com/SzaBee13/dev-tools-ps/blob/main/LICENSE)
 
 `dev` is a PowerShell function designed to simplify and streamline development workflows on Windows. It allows you to quickly open, create, manage, and version-control projects across multiple development types including web, Python, Discord bots, and more.
 
