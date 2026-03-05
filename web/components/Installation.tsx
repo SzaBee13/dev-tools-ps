@@ -87,7 +87,7 @@ export default function Installation() {
                 Set up your first root directory:
               </p>
               <code className="block bg-primary p-4 rounded overflow-x-auto text-sm text-green-400 ml-11">
-                dev set root web "D:/my-projects"
+                dev set root web &quot;D:/my-projects&quot;
               </code>
             </div>
           </div>

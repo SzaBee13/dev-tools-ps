@@ -125,7 +125,7 @@ export default function DocsPage() {
                   <div className="bg-secondary p-6 rounded-lg border border-gray-700">
                     <h4 className="font-semibold mb-3">Define a new root:</h4>
                     <code className="block bg-primary p-4 rounded text-green-400 mb-4">
-                      dev set root web "D:/my-web-projects"
+                      dev set root web &quot;D:/my-web-projects&quot;
                     </code>
                     
                     <h4 className="font-semibold mb-3">List all roots:</h4>
@@ -244,7 +244,7 @@ export default function DocsPage() {
                     <h4 className="font-semibold mb-3">Auto-pull on open</h4>
                     <p className="text-gray-300 mb-3">
                       When opening a folder with <code className="bg-primary px-2 py-1 rounded">dev open</code>, 
-                      it automatically checks if it's a Git repository with a remote and pulls the latest changes.
+                      it automatically checks if it&apos;s a Git repository with a remote and pulls the latest changes.
                     </p>
                   </div>
                   
@@ -254,7 +254,7 @@ export default function DocsPage() {
                       Use <code className="bg-primary px-2 py-1 rounded">dev release</code> for quick commits and push:
                     </p>
                     <code className="block bg-primary p-4 rounded text-green-400">
-                      dev release "Fixed bug in login" "- Updated validation<br/>- Added error handling"
+                      dev release &quot;Fixed bug in login&quot; &quot;- Updated validation<br/>- Added error handling&quot;
                     </code>
                   </div>
                 </div>
@@ -270,7 +270,7 @@ export default function DocsPage() {
                       <div>
                         <p className="text-gray-400 text-sm mb-1">1. Set up a web projects root</p>
                         <code className="block bg-primary p-3 rounded text-green-400">
-                          dev set root web "D:/web-projects"
+                          dev set root web &quot;D:/web-projects&quot;
                         </code>
                       </div>
                       <div>
@@ -285,7 +285,7 @@ export default function DocsPage() {
                       <div>
                         <p className="text-gray-400 text-sm mb-1">4. Commit and push changes</p>
                         <code className="block bg-primary p-3 rounded text-green-400">
-                          dev release "Initial commit" "Created portfolio structure"
+                          dev release &quot;Initial commit&quot; &quot;Created portfolio structure&quot;
                         </code>
                       </div>
                       <div>
