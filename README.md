@@ -1,8 +1,10 @@
 # Dev PowerShell Utility
 
-`dev` is a PowerShell function designed to simplify and streamline development workflows on Windows. It allows you to quickly open, create, manage, and version-control projects across multiple development types including web, Python, Discord bots, and more.
+[![GitHub contributors](https://img.shields.io/github/contributors/SzaBee13/dev-tools-ps)](https://github.com/SzaBee13/dev-tools-ps/graphs/contributors)
+[![GitHub release](https://img.shields.io/github/v/release/SzaBee13/dev-tools-ps?include_prereleases)](https://github.com/SzaBee13/dev-tools-ps/releases)
+[![License](https://img.shields.io/github/license/SzaBee13/dev-tools-ps)](https://github.com/SzaBee13/dev-tools-ps/blob/main/LICENSE)
 
----
+`dev` is a PowerShell function designed to simplify and streamline development workflows on Windows. It allows you to quickly open, create, manage, and version-control projects across multiple development types including web, Python, Discord bots, and more.
 
 ## Table of Contents
 
@@ -11,8 +13,6 @@
 * [Usage](#usage)
 * [Commands](#commands)
 * [Configuration](#configuration)
-
----
 
 ## Features
 
@@ -25,8 +25,6 @@
 * List existing project folders by category
 * Save default preferences for opening VSCode and Explorer
 
----
-
 ## Installation
 
 1. Copy the `dev` function into your PowerShell profile (usually located at `~\Documents\PowerShell\Microsoft.PowerShell_profile.ps1`).
@@ -38,8 +36,6 @@
   
 3. Ensure VSCode (`code`) and Git are installed and added to your PATH.
 
----
-
 ## Usage
 
 ```powershell
@@ -50,8 +46,6 @@ dev <action> [typeOrName] [name] [--code] [--explorer]
 * `[typeOrName]`: Depends on action (folder name, project type, root name, or Git URL).
 * `[name]`: Optional name for new project, commit message, folder, or root subfolder.
 * `[--code]`, `[--explorer]`: Override default behavior to open VSCode or Explorer.
-
----
 
 ## Commands
 
@@ -152,8 +146,6 @@ dev help
 
 Displays usage information.
 
----
-
 ## Configuration
 
 The tool stores default preferences in:
@@ -172,7 +164,5 @@ Example:
 ```
 
 You can toggle these defaults using the `dev set` command.
-
----
 
 Developed for Windows environments, `dev` centralizes development tasks to save time and reduce repetitive operations.

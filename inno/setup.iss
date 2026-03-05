@@ -23,7 +23,7 @@ LicenseFile=..\LICENSE.md
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
-OutputBaseFilename=dev-tools-{#MyAppVersion}
+OutputBaseFilename=dev-ps-utils.{#MyAppVersion}
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern

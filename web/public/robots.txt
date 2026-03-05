@@ -1,0 +1,19 @@
+# Dev PowerShell Utility - SEO Configuration
+User-agent: *
+Allow: /
+Disallow: /.next/
+Disallow: /_next/
+Disallow: /node_modules/
+
+# Sitemap
+Sitemap: https://dev.szabee.me/sitemap.xml
+
+# Crawl delay
+Crawl-delay: 1
+
+# Specific bot rules
+User-agent: Googlebot
+Crawl-delay: 0
+
+User-agent: Bingbot
+Crawl-delay: 1

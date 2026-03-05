@@ -1,0 +1,34 @@
+[
+  {
+    "version": "v1.2.1",
+    "date": "2026-03-04",
+    "fixed": [
+      "Fixed an issue where the `dev open` command would not pull the latest changes from a git repository before opening it.",
+      "Fixed an issue where the `dev open` command didn't open the folder in VSCode and Explorer based on the configuration settings."
+    ],
+    "added": [
+      "Added a check in the `dev open` command to see if the folder is a git repository with a remote URL, and if so, it will pull the latest changes before opening the folder."
+    ]
+  },
+  {
+    "version": "v1.2.0",
+    "date": "2026-03-01",
+    "added": [
+      "Auto git pull when opening a folder with `dev open` command",
+      "Automatic repository validation and status checking when opening projects",
+      "Enhanced root handling with improved default configuration system",
+      "Chocolatey package improvements and updates",
+      "Comprehensive markdown documentation"
+    ],
+    "improved": [
+      "Root path configuration and defaults handling",
+      "Repository opening workflow with automatic git integration",
+      "Application performance and usability across all commands",
+      "Modular structure for better code organization"
+    ],
+    "fixed": [
+      "Merge conflict resolution in dev.ps1",
+      "Repository check validation logic"
+    ]
+  }
+]
