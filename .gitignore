@@ -1,7 +1,8 @@
+# Ignore files that are not relevant to the project
 *.lnk
 *.tmp
 *.pem
 
 # Ide
 .vscode/
-.idea 
+.idea

@@ -1,0 +1,67 @@
+name: Feature request
+description: Suggest an improvement for dev-tools-ps
+title: "[Feature]: "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting an improvement.
+        Clear use-cases help prioritize and design better features.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem statement
+      description: What problem are you trying to solve?
+      placeholder: I want to ... because ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: Describe your ideal behavior or command syntax.
+      placeholder: Add `dev ...` support for ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Workarounds or different approaches you tried.
+
+  - type: textarea
+    id: examples
+    attributes:
+      label: Example usage
+      description: Optional CLI examples, config snippets, or screenshots.
+      render: shell
+
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Area
+      options:
+        - CLI / command UX
+        - Project creation templates
+        - Git workflow helpers
+        - Configuration and defaults
+        - Chrome extension
+        - Documentation site
+        - Packaging / installer
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I searched existing issues and did not find a duplicate request.
+          required: true
+        - label: This request is specific and actionable.
+          required: true

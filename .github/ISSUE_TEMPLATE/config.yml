@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability report
+    url: https://github.com/SzaBee13/dev-tools-ps/security/advisories/new
+    about: Report sensitive security issues privately through GitHub Security Advisories.

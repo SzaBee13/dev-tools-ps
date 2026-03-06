@@ -36,7 +36,16 @@ function Invoke-DevList {
         Get-ChildItem -Path $roots[$typeOrName] -Directory -ErrorAction SilentlyContinue | Select-Object Name
     }
     else {
-        Write-Host "Please specify a valid type or use --json flag" -ForegroundColor Red
+        # Clean list of repos by removing those that no longer exist on disk
+        $repos = Get-DevRepositories
+        $updatedRepos = @{}
+        foreach ($key in $repos.Keys) {
+            $repo = $repos[$key]
+            if (Test-Path $repo.path) {
+                $updatedRepos[$key] = $repo
+            }
+        }
+        return $updatedRepos.Values | Select-Object localName, url, path, platform, lastPulled
     }
 }
 
