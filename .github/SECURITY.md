@@ -15,7 +15,7 @@ If you discover a security vulnerability, do not open a public issue.
 
 Report it privately by using GitHub Security Advisories:
 
-- https://github.com/SzaBee13/dev-tools-ps/security/advisories/new
+- [GitHub Security Advisories](https://github.com/SzaBee13/dev-tools-ps/security/advisories/new)
 
 If that is not possible, contact the maintainer through GitHub and share details privately.
 

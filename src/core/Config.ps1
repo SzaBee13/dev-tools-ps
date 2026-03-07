@@ -7,6 +7,7 @@ function Get-DevConfig {
         explorer = $true
         pullPath = "D:\pull"
         driveRoot = "D:\"
+        defaultBranch = "main"
     }
     
     if (Test-Path $ConfigFile) {
@@ -16,6 +17,7 @@ function Get-DevConfig {
             $config.explorer = $cfg.explorer
             if ($cfg.pullPath) { $config.pullPath = $cfg.pullPath } else { $config.pullPath = "C:\\Users\\$env:USERNAME\\Downloads" }
             if ($cfg.driveRoot) { $config.driveRoot = $cfg.driveRoot } else { $config.driveRoot = "C:\\Users\\$env:USERNAME\\Documents" }
+            if ($cfg.defaultBranch) { $config.defaultBranch = $cfg.defaultBranch }
         }
         catch {
             Write-Host "Failed to load config.json, using defaults." -ForegroundColor Yellow

@@ -58,11 +58,15 @@ function Invoke-DevStatus {
 function Invoke-DevInit {
     param(
         [string]$typeOrName,
-        [string]$name
+        [string]$name,
+        [string]$branch,
+        [string]$defaultBranch
     )
+
+    $targetBranch = if ($branch) { $branch } elseif ($defaultBranch) { $defaultBranch } else { "main" }
     
     git init
-    git branch -M main
+    git branch -M $targetBranch
 
     # Load licenses
     $licenses = Get-DevLicenses
@@ -84,7 +88,7 @@ function Invoke-DevInit {
         git remote add origin $typeOrName
         git add .
         git commit -m "Initial commit"
-        git push -u origin main
+        git push -u origin $targetBranch
     }
     else {
         git add .

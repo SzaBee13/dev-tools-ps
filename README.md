@@ -1,7 +1,7 @@
 # Dev PowerShell Utility
 
 [![GitHub contributors](https://img.shields.io/github/contributors/SzaBee13/dev-tools-ps)](https://github.com/SzaBee13/dev-tools-ps/graphs/contributors)
-[![GitHub release](https://img.shields.io/github/v/release/SzaBee13/dev-tools-ps?include_prereleases)](https://github.com/SzaBee13/dev-tools-ps/releases)
+[![GitHub release](https://img.shields.io/github/v/release/SzaBee13/dev-tools-ps)](https://github.com/SzaBee13/dev-tools-ps/releases)
 [![License](https://img.shields.io/github/license/SzaBee13/dev-tools-ps)](https://github.com/SzaBee13/dev-tools-ps/blob/main/LICENSE.md)
 
 `dev` is a PowerShell function designed to simplify and streamline development workflows on Windows. It allows you to quickly open, create, manage, and version-control projects across multiple development types including web, Python, Discord bots, and more.
@@ -98,7 +98,7 @@ dev local-release <commit-message> [detailed-message]  # Commit locally without 
 ```
 
 ```powershell
-dev init [<git-repo-url>]  # Initialize Git repo with optional remote
+dev init [<git-repo-url>] [license-name] [--branch <branch-name>]  # Initialize Git repo with optional remote and branch override
 ```
 
 ```powershell
@@ -158,11 +158,16 @@ Example:
 
 ```json
 {
+  "pullPath": "D:\\pull",
   "code": true,
-  "explorer": true
+  "explorer": true,
+  "defaultRoot": "web",
+  "defaultBranch": "main"
 }
 ```
 
 You can toggle these defaults using the `dev set` command.
+
+`defaultBranch` is used by `dev init` when `--branch` is not provided.
 
 Developed for Windows environments, `dev` centralizes development tasks to save time and reduce repetitive operations.

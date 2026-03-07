@@ -25,6 +25,8 @@ function dev {
 
         [string]$name,
 
+        [string]$branch,
+
         [object]$code,
         [object]$explorer,
         
@@ -51,7 +53,7 @@ dev rm <folder-name>                 - Remove a folder
 dev pull [<git-repo-url>] [folder-name] - Clone or pull a git repository into a specified or default folder
 dev release <commit-message> [detailed-message] - Commit and push changes to the remote repository
 dev local-release <commit-message> [detailed-message] - Commit changes locally without pushing
-dev init [<git-repo-url>]            - Initialize a new git repository, optionally linking to a remote
+dev init [<git-repo-url>] [license-name] [--branch <branch-name>] - Initialize a new git repository, optionally linking to a remote
 dev status                           - Show git status
 dev list [--json]                    - List folders or repositories (--json outputs repos as JSON)
 dev ls <root-name>                   - List folders in specified category
@@ -103,7 +105,7 @@ dev set root <root-name> <path|rm|remove> - Add root to roots (saves to %appdata
             Invoke-DevStatus
         }
         "init" {
-            Invoke-DevInit -typeOrName $typeOrName -name $name
+            Invoke-DevInit -typeOrName $typeOrName -name $name -branch $branch -defaultBranch $config.defaultBranch
         }
         "set" {
             Invoke-DevSet -typeOrName $typeOrName -name $name -code $code

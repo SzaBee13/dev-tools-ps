@@ -2,5 +2,6 @@
   "pullPath": "D:\\pull",
   "code": true,
   "explorer": true,
-  "defaultRoot": "web"
+  "defaultRoot": "web",
+  "defaultBranch": "main"
 }
