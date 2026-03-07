@@ -1,0 +1,110 @@
+name: Build And Publish Packages
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  chocolatey-package:
+    runs-on: windows-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Extract version from release tag
+        id: version
+        run: |
+          $tag = "${{ github.ref }}" -replace "refs/tags/v", ""
+          "VERSION=$tag" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          Write-Host "Extracted version: $tag"
+      
+      - name: Update .nuspec version
+        run: |
+          $nuspec = "chocolatey/dev-ps-utils.nuspec"
+          $content = [xml](Get-Content $nuspec)
+          $content.package.metadata.version = "${{ steps.version.outputs.VERSION }}"
+          $content.Save($nuspec)
+          Write-Host "Updated .nuspec to version ${{ steps.version.outputs.VERSION }}"
+      
+      - name: Install Chocolatey
+        run: |
+          # Chocolatey is pre-installed on windows-latest, but ensure choco command is available
+          choco --version
+      
+      - name: Pack Chocolatey package
+        run: |
+          cd chocolatey
+          choco pack dev-ps-utils.nuspec --outputdirectory=./output
+          $nupkg = Get-ChildItem "./output/*.nupkg"
+          if (-not $nupkg) {
+            throw "No .nupkg file found after packing"
+          }
+          Write-Host "Package created: $($nupkg.Name)"
+      
+      - name: Upload .nupkg to release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $nupkgFile = Get-ChildItem "chocolatey/output/*.nupkg" | Select-Object -First 1
+          gh release upload ${{ github.ref_name }} "$($nupkgFile.FullName)"
+          Write-Host "Uploaded $($nupkgFile.Name) to release"
+      
+      - name: Push to Chocolatey Community Feed
+        run: |
+          $nupkgFile = Get-ChildItem "chocolatey/output/*.nupkg" | Select-Object -First 1
+          choco push "$($nupkgFile.FullName)" --source=https://push.chocolatey.org/ --api-key="${{ secrets.CHOCOLATEY_API_KEY }}"
+          Write-Host "Pushed package to Chocolatey community feed"
+  innosetup-installer:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Extract version (strip v prefix)
+        id: version
+        shell: bash
+        run: |
+          VERSION="${{ github.event.release.tag_name }}"
+          VERSION="${VERSION#v}"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Patch version in .iss file
+        shell: pwsh
+        run: |
+          $version = "${{ steps.version.outputs.version }}"
+          $issPath = "inno/setup.iss"
+          $content = Get-Content $issPath -Raw
+          $content = $content -replace '#define MyAppVersion\s+"[^"]*"', "#define MyAppVersion `"$version`""
+          Set-Content $issPath $content -NoNewline
+          Write-Host "Patched version to: $version"
+
+      - name: Install Inno Setup
+        run: choco install innosetup --no-progress -y
+
+      - name: Compile installer
+        run: iscc "inno/setup.iss"
+
+      - name: Find output file
+        id: find_output
+        shell: pwsh
+        run: |
+          # Inno Setup outputs to the Output folder next to the .iss by default
+          $file = Get-ChildItem -Path "inno/Output" -Filter "*.exe" | Select-Object -First 1
+          if (-not $file) {
+            # fallback: search repo root Output folder
+            $file = Get-ChildItem -Path "Output" -Filter "*.exe" | Select-Object -First 1
+          }
+          if (-not $file) {
+            throw "Installer .exe not found in inno/Output or Output"
+          }
+          echo "installer_path=$($file.FullName)" >> $env:GITHUB_OUTPUT
+          echo "installer_name=$($file.Name)" >> $env:GITHUB_OUTPUT
+          Write-Host "Found installer: $($file.FullName)"
+
+      - name: Upload installer to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ steps.find_output.outputs.installer_path }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

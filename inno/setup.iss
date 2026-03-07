@@ -4,7 +4,7 @@
 #define MyAppName "Dev PowerShell Utility"
 #define MyAppVersion "1.2.2"
 #define MyAppPublisher "SzaBee13"
-#define MyAppURL "https://github.com/SzaBee13/dev-tools-ps"
+#define MyAppURL "https://dev.szabee.me"
 #define MyAppExeName "dev.ps1"
 
 [Setup]
