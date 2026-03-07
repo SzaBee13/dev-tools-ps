@@ -1,10 +1,19 @@
-# Dev PowerShell Utility
+<header style="text-align: center;">
+<h1>Dev PowerShell Utility</h1>
 
 [![GitHub contributors](https://img.shields.io/github/contributors/SzaBee13/dev-tools-ps)](https://github.com/SzaBee13/dev-tools-ps/graphs/contributors)
 [![GitHub release](https://img.shields.io/github/v/release/SzaBee13/dev-tools-ps)](https://github.com/SzaBee13/dev-tools-ps/releases)
 [![License](https://img.shields.io/github/license/SzaBee13/dev-tools-ps)](https://github.com/SzaBee13/dev-tools-ps/blob/main/LICENSE.md)
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/SzaBee13/dev-tools-ps/package-builder.yml)](https://github.com/SzaBee13/dev-tools-ps/actions/workflows/package-builder.yml)
+\
+[![GitHub Repo stars](https://img.shields.io/github/stars/SzaBee13/dev-tools-ps)](https://github.com/SzaBee13/dev-tools-ps/stargazers)
+[![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/SzaBee13/dev-tools-ps)](https://github.com/SzaBee13/dev-tools-ps/issues)
+[![GitHub Issues or Pull Requests](https://img.shields.io/github/issues-pr/SzaBee13/dev-tools-ps)](https://github.com/SzaBee13/dev-tools-ps/pulls)
+</header>
 
+<section style="text-align: justify;">
 `dev` is a PowerShell function designed to simplify and streamline development workflows on Windows. It allows you to quickly open, create, manage, and version-control projects across multiple development types including web, Python, Discord bots, and more.
+</section>
 
 ## Table of Contents
 
